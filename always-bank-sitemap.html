@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mapa de Sitio — Always.Bank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --bg: #0a0e1a;
+            --surface: #111827;
+            --surface2: #1a2236;
+            --border: #1e2d45;
+            --accent: #2563eb;
+            --accent2: #3b82f6;
+            --accent-glow: rgba(37, 99, 235, 0.18);
+            --green: #10b981;
+            --amber: #f59e0b;
+            --purple: #8b5cf6;
+            --cyan: #06b6d4;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --tag-bg: rgba(37, 99, 235, 0.15);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            background: linear-gradient(135deg, #0a0e1a 0%, #0d1b3e 50%, #0a0e1a 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 56px 24px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(37, 99, 235, 0.22) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--tag-bg);
+            border: 1px solid rgba(37, 99, 235, 0.4);
+            border-radius: 999px;
+            padding: 4px 14px;
+            font-size: 12px;
+            color: var(--accent2);
+            font-weight: 600;
+            letter-spacing: .04em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #93c5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            color: var(--muted);
+            font-size: 1rem;
+            max-width: 540px;
+            margin: 0 auto 28px;
+        }
+
+        .hero-url {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 13px;
+            color: var(--accent2);
+            font-weight: 500;
+            text-decoration: none;
+            transition: border-color .2s;
+        }
+
+        .hero-url:hover {
+            border-color: var(--accent2);
+        }
+
+        /* ── STATS BAR ── */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 24px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+        }
+
+        /* ── LAYOUT ── */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        /* ── SECTION HEADINGS ── */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title .icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        /* ── TREE ── */
+        .tree {
+            margin-bottom: 56px;
+        }
+
+        .tree-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        /* ── CARD ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: border-color .2s, transform .2s, box-shadow .2s;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(37, 99, 235, 0.15);
+        }
+
+        .card-header {
+            padding: 16px 18px 14px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .95rem;
+            flex-shrink: 0;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: .95rem;
+            color: #fff;
+        }
+
+        .card-url {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .card-body {
+            padding: 14px 18px;
+        }
+
+        .item-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .item-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: .83rem;
+            color: var(--muted);
+        }
+
+        .item-list li::before {
+            content: '›';
+            color: var(--accent2);
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── CTA TAGS ── */
+        .cta-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .cta-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid;
+            cursor: default;
+            transition: opacity .2s;
+        }
+
+        .cta-tag:hover {
+            opacity: .8;
+        }
+
+        .cta-primary {
+            background: rgba(37, 99, 235, .15);
+            border-color: rgba(37, 99, 235, .45);
+            color: #93c5fd;
+        }
+
+        .cta-green {
+            background: rgba(16, 185, 129, .12);
+            border-color: rgba(16, 185, 129, .4);
+            color: #6ee7b7;
+        }
+
+        .cta-amber {
+            background: rgba(245, 158, 11, .12);
+            border-color: rgba(245, 158, 11, .4);
+            color: #fcd34d;
+        }
+
+        .cta-purple {
+            background: rgba(139, 92, 246, .12);
+            border-color: rgba(139, 92, 246, .4);
+            color: #c4b5fd;
+        }
+
+        .cta-cyan {
+            background: rgba(6, 182, 212, .12);
+            border-color: rgba(6, 182, 212, .4);
+            color: #a5f3fc;
+        }
+
+        /* ── FULL-WIDTH CARD (footer) ── */
+        .card-wide {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 56px;
+            transition: border-color .2s;
+        }
+
+        .card-wide:hover {
+            border-color: var(--accent);
+        }
+
+        .card-wide .card-header {
+            flex-wrap: nowrap;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 24px;
+            padding: 20px 18px;
+        }
+
+        .footer-col h4 {
+            font-size: .8rem;
+            font-weight: 700;
+            color: var(--accent2);
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .footer-col ul li {
+            font-size: .82rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer-col ul li::before {
+            content: '•';
+            color: var(--accent2);
+        }
+
+        /* ── LEGEND ── */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 32px;
+            padding: 16px 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .legend span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+        }
+
+        /* ── FLOW DIAGRAM ── */
+        .flow {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px 24px;
+            margin-bottom: 56px;
+        }
+
+        .flow-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .flow-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .flow-box {
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: .82rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: 110px;
+            border: 1px solid;
+        }
+
+        .flow-root {
+            background: rgba(37, 99, 235, .2);
+            border-color: var(--accent);
+            color: #93c5fd;
+        }
+
+        .flow-l1 {
+            background: rgba(16, 185, 129, .15);
+            border-color: var(--green);
+            color: #6ee7b7;
+        }
+
+        .flow-l2 {
+            background: rgba(30, 42, 69, .9);
+            border-color: var(--border);
+            color: var(--muted);
+            font-size: .75rem;
+            font-weight: 500;
+        }
+
+        .flow-arrow {
+            color: var(--accent2);
+            font-size: 1.3rem;
+            padding: 0 8px;
+            align-self: center;
+        }
+
+        .flow-children {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        /* ── TABLE ── */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 56px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .84rem;
+        }
+
+        th {
+            background: var(--surface2);
+            color: var(--accent2);
+            font-size: .72rem;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            font-weight: 700;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, .025);
+        }
+
+        td code {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: .78rem;
+            color: var(--cyan);
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+
+        /* ── FOOTER NOTE ── */
+        .footer-note {
+            text-align: center;
+            color: var(--muted);
+            font-size: .8rem;
+            padding: 32px 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ── COLORS PER SECTION ── */
+        .c-blue {
+            background: rgba(37, 99, 235, .15);
+        }
+
+        .c-green {
+            background: rgba(16, 185, 129, .12);
+        }
+
+        .c-amber {
+            background: rgba(245, 158, 11, .12);
+        }
+
+        .c-purple {
+            background: rgba(139, 92, 246, .12);
+        }
+
+        .c-cyan {
+            background: rgba(6, 182, 212, .12);
+        }
+
+        .c-rose {
+            background: rgba(244, 63, 94, .12);
+        }
+
+        .bc-blue {
+            border-color: rgba(37, 99, 235, .5) !important;
+        }
+
+        .bc-green {
+            border-color: rgba(16, 185, 129, .45) !important;
+        }
+
+        .bc-amber {
+            border-color: rgba(245, 158, 11, .45) !important;
+        }
+
+        .bc-purple {
+            border-color: rgba(139, 92, 246, .45) !important;
+        }
+
+        .bc-cyan {
+            border-color: rgba(6, 182, 212, .45) !important;
+        }
+
+        .bc-rose {
+            border-color: rgba(244, 63, 94, .45) !important;
+        }
+
+        /* responsive */
+        @media (max-width: 600px) {
+            .stats {
+                gap: 20px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ══════════ HERO ══════════ -->
+    <header class="hero">
+        <div class="hero-badge">🗺️ Mapa de Sitio</div>
+        <h1>Always.Bank</h1>
+        <p>Estructura completa del sitio web, navegación, secciones, páginas y todos los CTAs.</p>
+        <a class="hero-url" href="https://www.always.bank" target="_blank">
+            🔗 www.always.bank
+        </a>
+    </header>
+
+    <!-- ══════════ STATS ══════════ -->
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-num">3</div>
+            <div class="stat-label">Menús Principales</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">12</div>
+            <div class="stat-label">Páginas</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">10</div>
+            <div class="stat-label">CTAs únicos</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">6</div>
+            <div class="stat-label">Formularios</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">4</div>
+            <div class="stat-label">Redes Sociales</div>
+        </div>
+    </div>
+
+    <!-- ══════════ CONTENIDO ══════════ -->
+    <div class="container">
+
+        <!-- LEYENDA -->
+        <div class="legend">
+            <strong style="color:#fff; margin-right:4px;">Leyenda CTAs:</strong>
+            <span><span class="legend-dot" style="background:#2563eb;"></span>Principal / Get Started</span>
+            <span><span class="legend-dot" style="background:#10b981;"></span>Formulario / Notificación</span>
+            <span><span class="legend-dot" style="background:#f59e0b;"></span>Acceso / Login</span>
+            <span><span class="legend-dot" style="background:#8b5cf6;"></span>Informativo</span>
+            <span><span class="legend-dot" style="background:#06b6d4;"></span>Legal / Soporte</span>
+        </div>
+
+        <!-- ══ 1. DIAGRAMA DE ÁRBOL ══ -->
+        <div class="tree">
+            <div class="section-title">
+                <div class="icon c-blue bc-blue" style="border:1px solid;">🌐</div>
+                1. Estructura Jerárquica del Sitio
+            </div>
+            <div class="flow">
+                <div class="flow-row" style="justify-content:center; gap:0; margin-bottom: 20px;">
+                    <div class="flow-node">
+                        <div class="flow-box flow-root">🏛️ always.bank</div>
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:center; gap: 32px; flex-wrap: wrap; align-items:flex-start;">
+
+                    <!-- LOANS -->
+                    <div class="flow-node">
+                        <div class="flow-box flow-l1">💰 Loans</div>
+                        <div class="flow-children">
+                            <div class="flow-box flow-l2">Traditional Loans</div>
+                            <div class="flow-box flow-l2">└ Term Loans</div>
+                            <div class="flow-box flow-l2">└ Lines of Credit</div>
+                            <div class="flow-box flow-l2">Gov. Guaranteed</div>
+                            <div class="flow-box flow-l2">└ SBA Loans</div>
+                            <div class="flow-box flow-l2">└ USDA Loans</div>
+                            <div class="flow-box flow-l2">Specialty Finance</div>
+                            <div class="flow-box flow-l2">└ Invoice Factoring</div>
+                            <div class="flow-box flow-l2">└ Asset-Based Lending</div>
+                        </div>
+                    </div>
+
+                    <!-- BANKING -->
+                    <div class="flow-node">
+                        <div class="flow-box flow-l1"
+                            style="background:rgba(139,92,246,.15);border-color:#8b5cf6;color:#c4b5fd;">🏦 Banking</div>
+                        <div class="flow-children">
+                            <div class="flow-box flow-l2">Business</div>
+                            <div class="flow-box flow-l2">└ Always Business Banking</div>
+                            <div class="flow-box flow-l2">Personal</div>
+                            <div class="flow-box flow-l2">└ Always Personal Banking</div>
+                            <div class="flow-box flow-l2">└ Always Savings Account</div>
+                        </div>
+                    </div>
+
+                    <!-- LEARN -->
+                    <div class="flow-node">
+                        <div class="flow-box flow-l1"
+                            style="background:rgba(245,158,11,.15);border-color:#f59e0b;color:#fcd34d;">📚 Learn</div>
+                        <div class="flow-children">
+                            <div class="flow-box flow-l2">Resources</div>
+                            <div class="flow-box flow-l2">└ Blog</div>
+                            <div class="flow-box flow-l2">└ FAQs</div>
+                            <div class="flow-box flow-l2">About Always.bank</div>
+                            <div class="flow-box flow-l2">└ Meet The Team</div>
+                            <div class="flow-box flow-l2">└ Core Values</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ 2. PÁGINAS CON CTAs ══ -->
+        <div class="tree">
+            <div class="section-title">
+                <div class="icon c-green bc-green" style="border:1px solid;">📄</div>
+                2. Páginas y sus CTAs
+            </div>
+            <div class="tree-grid">
+
+                <!-- HOME -->
+                <div class="card bc-blue">
+                    <div class="card-header">
+                        <div class="card-icon c-blue bc-blue" style="border:1px solid;">🏠</div>
+                        <div>
+                            <div class="card-title">Página de Inicio</div>
+                            <div class="card-url">always.bank/</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="item-list">
+                            <li>Banner principal con propuesta de valor</li>
+                            <li>Sección "What We Offer" (Préstamos y Banca)</li>
+                            <li>Banner de cookies (aceptar/rechazar)</li>
+                        </ul>
+                        <div class="cta-list">
+                            <span class="cta-tag cta-primary">🚀 Get Started</span>
+                            <span class="cta-tag cta-amber">🔑 Login</span>
+                            <span class="cta-tag cta-primary">❓ Ask Us How</span>
+                            <span class="cta-tag cta-cyan">✅ Accept Cookies</span>
+                            <span class="cta-tag cta-cyan">✖ Decline Cookies</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TRADITIONAL LOANS -->
+                <div class="card bc-green">
+                    <div class="card-header">
+                        <div class="card-icon c-green bc-green" style="border:1px solid;">📋</div>
+                        <div>
+                            <div class="card-title">Traditional Loans</div>
+                            <div class="card-url">/business-loans/traditional/</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="item-list">
+                            <li>Term Loans — financiamiento a plazo fijo</li>
+                            <li>Lines of Credit — crédito revolvente</li>
+                        </ul>
+                        <div class="cta-list">
+                            <span class="cta-tag cta-primary">🚀 Get Started</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GOV GUARANTEED -->
+                <div class="card bc-green">
+                    <div class="card-header">
+                        <div class="card-icon c-green bc-green" style="border:1px solid;">🏛️</div>
+                        <div>
+                            <div class="card-title">Government Guaranteed</div>
+                            <div class="card-url">/business-loans/government-guaranteed-loans-sba-and-usda/</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="item-list">
+                            <li>SBA Loans — préstamos avalados por la SBA</li>
+                            <li>USDA Loans — préstamos para áreas rurales</li>
+                        </ul>
+                        <div class="cta-list">
+                            <span class="cta-tag cta-primary">🚀 Get Started</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SPECIALTY FINANCE -->
+                <div class="card bc-green">
+                    <div class="card-header">
+                        <div class="card-icon c-green bc-green" style="border:1px solid;">⚙️</div>
+                        <div>
+                            <div class="card-title">Specialty Finance</div>
+                            <div class="card-url">/business-loans/specialty-finance/</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="item-list">
+                            <li>Invoice Factoring — adelanto de facturas</li>
+                            <li>Asset-Based Lending — crédito basado en activos</li>
+                        </ul>
+                        <div class="cta-list">
+                            <span class="cta-tag cta-primary">🚀 Get Started</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BUSINESS BANKING -->
+                <div class="card bc-purple">
+                    <div class="card-header">
+                        <div class="card-icon c-purple bc-purple" style="border:1px solid;">🏢</div>
+                        <div>
+                            <div class="card-title">Always Business Banking</div>
+                            <div class="card-url">/small-business-banking-products/</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="item-list">
+                            <li>Small Business Savings</li>
+                            <li>Small Business Checking <span
+                                    style="color:#f59e0b;font-size:.75rem;">(Próximamente)</span></li>
+                        </ul>
+                        <div class="cta-list">
+                            <span class="cta-tag cta-green">🔔 Notify Me</span>
+                            <span class="cta-tag cta-primary">🚀 Get Started</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PERSONAL BANKING -->
+                <div class="card bc-purple">
+                    <div class="card-header">
+                        <div class="card-icon c-purple bc-purple" style="border:1px solid;">👤</div>
+                        <div>
+                            <div class="card-title">Always Personal Banking</div>
+                            <div class="card-url">/always-personal-banking/</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="item-list">
+                            <li>Always Savings Account</li>
+                            <li>Consumer Certificate of Deposit <span
+                                    style="color:#f59e0b;font-size:.75rem;">(Próximamente)</span></li>
+                        </ul>
+                        <div class="cta-list">
+                            <span class="cta-tag cta-green">🔔 Notify Me</span>
+                            <span class="cta-tag cta-green">🔔 Get Notified</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BLOG -->
+                <div class="card bc-amber">
+                    <div class="card-header">
+                        <div class="card-icon c-amber bc-amber" style="border:1px solid;">✍️</div>
+                        <div>
+                            <div class="card-title">Blog</div>
+                            <div class="card-url">/blog/</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="item-list">
+                            <li>Artículos y recursos informativos</li>
+                            <li>Educación financiera</li>
+                        </ul>
+                        <div class="cta-list">
+                            <span class="cta-tag cta-purple">📖 Read More</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQS -->
+                <div class="card bc-amber">
+                    <div class="card-header">
+                        <div class="card-icon c-amber bc-amber" style="border:1px solid;">❓</div>
+                        <div>
+                            <div class="card-title">FAQs</div>
+                            <div class="card-url">/faqs/</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="item-list">
+                            <li>Preguntas frecuentes sobre productos</li>
+                            <li>Soporte para clientes</li>
+                        </ul>
+                        <div class="cta-list">
+                            <span class="cta-tag cta-primary">🚀 Get Started</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MEET THE TEAM -->
+                <div class="card bc-cyan">
+                    <div class="card-header">
+                        <div class="card-icon c-cyan bc-cyan" style="border:1px solid;">👥</div>
+                        <div>
+                            <div class="card-title">Meet The Team</div>
+                            <div class="card-url">/team/</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="item-list">
+                            <li>Senior Management presentado</li>
+                            <li>Perfiles del equipo directivo</li>
+                        </ul>
+                        <div class="cta-list">
+                            <span class="cta-tag cta-primary">🚀 Get Started</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CORE VALUES -->
+                <div class="card bc-cyan">
+                    <div class="card-header">
+                        <div class="card-icon c-cyan bc-cyan" style="border:1px solid;">💎</div>
+                        <div>
+                            <div class="card-title">Core Values</div>
+                            <div class="card-url">/core-values/</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="item-list">
+                            <li>Misión y visión del banco</li>
+                            <li>Principios y cultura corporativa</li>
+                        </ul>
+                        <div class="cta-list">
+                            <span class="cta-tag cta-primary">🚀 Get Started</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GET STARTED -->
+                <div class="card" style="border-color:rgba(37,99,235,.6); box-shadow: 0 0 24px rgba(37,99,235,.12);">
+                    <div class="card-header">
+                        <div class="card-icon c-blue" style="border:1px solid rgba(37,99,235,.5);">🚀</div>
+                        <div>
+                            <div class="card-title">Get Started</div>
+                            <div class="card-url">/get-started/</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="item-list">
+                            <li>Formulario de contacto / solicitud</li>
+                            <li>Punto de entrada principal de conversión</li>
+                            <li>Destino del CTA más frecuente del sitio</li>
+                        </ul>
+                        <div class="cta-list">
+                            <span class="cta-tag cta-primary">📩 Submit Form</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LOGIN -->
+                <div class="card bc-amber">
+                    <div class="card-header">
+                        <div class="card-icon c-amber bc-amber" style="border:1px solid;">🔑</div>
+                        <div>
+                            <div class="card-title">Login</div>
+                            <div class="card-url">/login/</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="item-list">
+                            <li>Acceso para clientes existentes</li>
+                            <li>Portal seguro de banca en línea</li>
+                        </ul>
+                        <div class="cta-list">
+                            <span class="cta-tag cta-amber">🔑 Login</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ══ 3. TABLA RESUMEN CTAs ══ -->
+        <div class="tree">
+            <div class="section-title">
+                <div class="icon c-purple bc-purple" style="border:1px solid;">⚡</div>
+                3. Resumen Completo de CTAs
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CTA</th>
+                            <th>Páginas donde aparece</th>
+                            <th>URL de destino</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Get Started</strong></td>
+                            <td>Home, Traditional Loans, Gov. Guaranteed, Specialty Finance, Business Banking, FAQs,
+                                Meet The Team, Core Values</td>
+                            <td><code>/get-started/</code></td>
+                            <td><span class="cta-tag cta-primary" style="font-size:11px;">Principal</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ask Us How</strong></td>
+                            <td>Home (sección "What We Offer" – Loans)</td>
+                            <td><code>/get-started/</code></td>
+                            <td><span class="cta-tag cta-primary" style="font-size:11px;">Principal</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Login</strong></td>
+                            <td>Header global (todas las páginas)</td>
+                            <td><code>/login/</code></td>
+                            <td><span class="cta-tag cta-amber" style="font-size:11px;">Acceso</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Notify Me / Get Notified</strong></td>
+                            <td>Business Banking, Personal Banking</td>
+                            <td>Formulario inline</td>
+                            <td><span class="cta-tag cta-green" style="font-size:11px;">Formulario</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Accept / Decline Cookies</strong></td>
+                            <td>Home (banner inicial)</td>
+                            <td>—</td>
+                            <td><span class="cta-tag cta-cyan" style="font-size:11px;">Legal</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Read More (Blog)</strong></td>
+                            <td>Blog</td>
+                            <td>Artículos individuales</td>
+                            <td><span class="cta-tag cta-purple" style="font-size:11px;">Informativo</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ══ 4. FOOTER ══ -->
+        <div class="tree">
+            <div class="section-title">
+                <div class="icon c-cyan bc-cyan" style="border:1px solid;">🔗</div>
+                4. Pie de Página (Footer)
+            </div>
+            <div class="card-wide">
+                <div class="card-header">
+                    <div class="card-icon c-cyan bc-cyan" style="border:1px solid;">📎</div>
+                    <div>
+                        <div class="card-title">Footer Global</div>
+                        <div class="card-url">Presente en todas las páginas</div>
+                    </div>
+                </div>
+                <div class="footer-grid">
+                    <div class="footer-col">
+                        <h4>💰 Loans</h4>
+                        <ul>
+                            <li>Term Loans</li>
+                            <li>Lines of Credit</li>
+                            <li>SBA Loans</li>
+                            <li>USDA Loans</li>
+                            <li>Invoice Factoring</li>
+                            <li>Asset-Based Lending</li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>🏢 Business</h4>
+                        <ul>
+                            <li>Always Business Banking</li>
+                        </ul>
+                        <h4 style="margin-top:14px;">👤 Personal</h4>
+                        <ul>
+                            <li>Always Personal Banking</li>
+                            <li>Always Savings Account</li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>📚 Resources</h4>
+                        <ul>
+                            <li>Blog</li>
+                            <li>FAQs</li>
+                            <li>Deposit Terms &amp; Conditions</li>
+                        </ul>
+                        <h4 style="margin-top:14px;">ℹ️ About</h4>
+                        <ul>
+                            <li>Meet The Team</li>
+                            <li>Core Values</li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>📱 Follow Us</h4>
+                        <ul>
+                            <li>Facebook</li>
+                            <li>YouTube</li>
+                            <li>LinkedIn</li>
+                            <li>Instagram</li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>⚖️ Legal</h4>
+                        <ul>
+                            <li>Privacy Policy</li>
+                            <li>Security</li>
+                            <li>Accessibility</li>
+                            <li>Terms of Use</li>
+                            <li>FDIC-Insured</li>
+                            <li>Equal Housing Lender</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ══ 5. FORMULARIOS ══ -->
+        <div class="tree">
+            <div class="section-title">
+                <div class="icon c-rose bc-rose" style="border:1px solid;">📝</div>
+                5. Formularios — /get-started/
+            </div>
+            <p style="color:var(--muted);font-size:.88rem;margin-bottom:20px;">La página <code
+                    style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 6px;color:var(--cyan);font-family:monospace">/get-started/</code>
+                contiene <strong style="color:#fff;">6 formularios en acordeón</strong>. Cada uno se activa según el
+                producto de interés del usuario.</p>
+
+            <!-- FORM CARDS GRID -->
+            <div style="display:flex;flex-direction:column;gap:20px;">
+
+                <!-- F1: Traditional Loan -->
+                <div class="card-wide bc-green">
+                    <div class="card-header">
+                        <div class="card-icon c-green bc-green" style="border:1px solid;">📋</div>
+                        <div>
+                            <div class="card-title">Apply for an Always Traditional Loan</div>
+                            <div class="card-url">Acordeón #1 · /get-started/</div>
+                        </div>
+                    </div>
+                    <div style="padding:4px 18px 16px;">
+                        <p style="font-size:.82rem;color:var(--muted);margin:10px 0 14px;">"Need a reliable loan to move
+                            your business forward? Complete the form below to apply for a Traditional loan customized to
+                            your needs."</p>
+                        <div class="table-wrap" style="margin-bottom:0;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Campo</th>
+                                        <th>Tipo</th>
+                                        <th>Requerido</th>
+                                        <th>Opciones / Placeholder</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td><strong>First Name</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>First Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td><strong>Last Name</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Last Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td><strong>Phone Number</strong></td>
+                                        <td>Teléfono</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Phone Number</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td><strong>Personal Email</strong></td>
+                                        <td>Email</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Personal Email</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td><strong>State / Region / Province</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>State/Region/Province</td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td><strong>Company</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Company</td>
+                                    </tr>
+                                    <tr>
+                                        <td>7</td>
+                                        <td><strong>Your Title</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Your Title</td>
+                                    </tr>
+                                    <tr>
+                                        <td>8</td>
+                                        <td><strong>Business Email</strong></td>
+                                        <td>Email</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Business Email</td>
+                                    </tr>
+                                    <tr>
+                                        <td>9</td>
+                                        <td><strong>Company Annual Revenue</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Company Annual Revenue</td>
+                                    </tr>
+                                    <tr>
+                                        <td>10</td>
+                                        <td><strong>Desired Loan Amount</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>What is your desired loan amount?</td>
+                                    </tr>
+                                    <tr>
+                                        <td>11</td>
+                                        <td><strong>Purpose of Loan</strong></td>
+                                        <td>Dropdown</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Business Acquisition · Equipment Purchase · Real Estate · Working Capital ·
+                                            Debt Refinance · Other</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" style="text-align:right;"><span class="cta-tag cta-primary">📩
+                                                Submit</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- F2: SBA/USDA -->
+                <div class="card-wide bc-blue">
+                    <div class="card-header">
+                        <div class="card-icon c-blue bc-blue" style="border:1px solid;">🏛️</div>
+                        <div>
+                            <div class="card-title">Learn More about SBA or USDA Loan</div>
+                            <div class="card-url">Acordeón #2 · /get-started/</div>
+                        </div>
+                    </div>
+                    <div style="padding:4px 18px 16px;">
+                        <div class="table-wrap" style="margin-bottom:0;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Campo</th>
+                                        <th>Tipo</th>
+                                        <th>Requerido</th>
+                                        <th>Opciones / Placeholder</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td><strong>First Name</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>First Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td><strong>Last Name</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Last Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td><strong>Phone Number</strong></td>
+                                        <td>Teléfono</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Phone Number</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td><strong>Personal Email</strong></td>
+                                        <td>Email</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Personal Email</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td><strong>State / Region / Province</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>State/Region/Province</td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td><strong>Company</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Company</td>
+                                    </tr>
+                                    <tr>
+                                        <td>7</td>
+                                        <td><strong>Your Title</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Your Title</td>
+                                    </tr>
+                                    <tr>
+                                        <td>8</td>
+                                        <td><strong>Business Email</strong></td>
+                                        <td>Email</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Business Email</td>
+                                    </tr>
+                                    <tr>
+                                        <td>9</td>
+                                        <td><strong>Company Annual Revenue</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Company Annual Revenue</td>
+                                    </tr>
+                                    <tr>
+                                        <td>10</td>
+                                        <td><strong>SBA or USDA Loan Interest</strong></td>
+                                        <td>Dropdown</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>SBA Loan · USDA Loan</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" style="text-align:right;"><span class="cta-tag cta-primary">📩
+                                                Submit</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- F3: Asset-Based Lending -->
+                <div class="card-wide bc-purple">
+                    <div class="card-header">
+                        <div class="card-icon c-purple bc-purple" style="border:1px solid;">⚙️</div>
+                        <div>
+                            <div class="card-title">Apply for Asset-Based Lending</div>
+                            <div class="card-url">Acordeón #3 · /get-started/</div>
+                        </div>
+                    </div>
+                    <div style="padding:4px 18px 16px;">
+                        <p style="font-size:.82rem;color:var(--muted);margin:10px 0 14px;">"Unlock the value of your
+                            assets to fuel your business growth. Fill out the form below to explore Asset-Based Lending
+                            solutions with Always.bank."</p>
+                        <div class="table-wrap" style="margin-bottom:0;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Campo</th>
+                                        <th>Tipo</th>
+                                        <th>Requerido</th>
+                                        <th>Opciones / Placeholder</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td><strong>First Name</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>First Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td><strong>Last Name</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Last Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td><strong>Phone Number</strong></td>
+                                        <td>Teléfono</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Phone Number</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td><strong>Personal Email</strong></td>
+                                        <td>Email</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Personal Email</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td><strong>State / Region / Province</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>State/Region/Province</td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td><strong>Company</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Company</td>
+                                    </tr>
+                                    <tr>
+                                        <td>7</td>
+                                        <td><strong>Industry</strong></td>
+                                        <td>Dropdown</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Varias industrias</td>
+                                    </tr>
+                                    <tr>
+                                        <td>8</td>
+                                        <td><strong>Estimated Funding Amount</strong></td>
+                                        <td>Dropdown</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Rangos de monto</td>
+                                    </tr>
+                                    <tr>
+                                        <td>9</td>
+                                        <td><strong>How did you hear about us?</strong></td>
+                                        <td>Dropdown</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Varias opciones de referido</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" style="text-align:right;"><span class="cta-tag cta-primary">📩
+                                                Submit</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- F4: Invoice Factoring -->
+                <div class="card-wide bc-amber">
+                    <div class="card-header">
+                        <div class="card-icon c-amber bc-amber" style="border:1px solid;">🧾</div>
+                        <div>
+                            <div class="card-title">Apply for Invoice Factoring</div>
+                            <div class="card-url">Acordeón #4 · /get-started/</div>
+                        </div>
+                    </div>
+                    <div style="padding:4px 18px 16px;">
+                        <p style="font-size:.82rem;color:var(--muted);margin:10px 0 14px;">"Turn your unpaid invoices
+                            into immediate working capital. Just fill out the form below to get started with Invoice
+                            Factoring."</p>
+                        <div class="table-wrap" style="margin-bottom:0;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Campo</th>
+                                        <th>Tipo</th>
+                                        <th>Requerido</th>
+                                        <th>Opciones / Placeholder</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td><strong>First Name</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>First Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td><strong>Last Name</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Last Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td><strong>Phone Number</strong></td>
+                                        <td>Teléfono</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Phone Number</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td><strong>Personal Email</strong></td>
+                                        <td>Email</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Personal Email</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td><strong>Company</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Company</td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td><strong>State / Region / Province</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>State/Region/Province</td>
+                                    </tr>
+                                    <tr>
+                                        <td>7</td>
+                                        <td><strong>Industry</strong></td>
+                                        <td>Dropdown</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Varias industrias</td>
+                                    </tr>
+                                    <tr>
+                                        <td>8</td>
+                                        <td><strong>Estimated Funding Amount</strong></td>
+                                        <td>Dropdown</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Rangos de monto</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" style="text-align:right;"><span class="cta-tag cta-primary">📩
+                                                Submit</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- F5: Contact Us -->
+                <div class="card-wide bc-cyan">
+                    <div class="card-header">
+                        <div class="card-icon c-cyan bc-cyan" style="border:1px solid;">💬</div>
+                        <div>
+                            <div class="card-title">Contact Us</div>
+                            <div class="card-url">Acordeón #5 · /get-started/</div>
+                        </div>
+                    </div>
+                    <div style="padding:4px 18px 16px;">
+                        <p style="font-size:.82rem;color:var(--muted);margin:10px 0 14px;">"Have any questions or need
+                            help finding the right solution for your business? Fill out the form below and a member of
+                            our team will be in touch soon."</p>
+                        <div class="table-wrap" style="margin-bottom:0;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Campo</th>
+                                        <th>Tipo</th>
+                                        <th>Requerido</th>
+                                        <th>Opciones / Placeholder</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td><strong>First Name</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>First Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td><strong>Last Name</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Last Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td><strong>Email</strong></td>
+                                        <td>Email</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Email</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td><strong>Phone Number</strong></td>
+                                        <td>Teléfono</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Phone Number</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td><strong>Message</strong></td>
+                                        <td>Textarea</td>
+                                        <td><span class="cta-tag cta-amber" style="font-size:10px;">— Opcional</span>
+                                        </td>
+                                        <td>Mensaje libre</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" style="text-align:right;"><span class="cta-tag cta-primary">📩
+                                                Submit</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- F6: Email Updates -->
+                <div class="card-wide" style="border-color:rgba(139,92,246,.45);">
+                    <div class="card-header">
+                        <div class="card-icon c-purple bc-purple" style="border:1px solid;">📧</div>
+                        <div>
+                            <div class="card-title">Sign Up for Email Updates</div>
+                            <div class="card-url">Acordeón #6 · /get-started/</div>
+                        </div>
+                    </div>
+                    <div style="padding:4px 18px 16px;">
+                        <p style="font-size:.82rem;color:var(--muted);margin:10px 0 14px;">"Want to stay in the loop
+                            with the latest from Always.bank? Fill out the sign-up form below to get updates, insights,
+                            and tips delivered straight to your inbox."</p>
+                        <div class="table-wrap" style="margin-bottom:0;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Campo</th>
+                                        <th>Tipo</th>
+                                        <th>Requerido</th>
+                                        <th>Opciones / Placeholder</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td><strong>First Name</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>First Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td><strong>Last Name</strong></td>
+                                        <td>Texto</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Last Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td><strong>Email</strong></td>
+                                        <td>Email</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Email</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td><strong>Phone Number</strong></td>
+                                        <td>Teléfono</td>
+                                        <td><span class="cta-tag cta-green" style="font-size:10px;">✓ Sí</span></td>
+                                        <td>Phone Number</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td><strong>Message</strong></td>
+                                        <td>Textarea</td>
+                                        <td><span class="cta-tag cta-amber" style="font-size:10px;">— Opcional</span>
+                                        </td>
+                                        <td>Mensaje libre</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" style="text-align:right;"><span class="cta-tag cta-primary">📩
+                                                Submit</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Open an Account note -->
+                <div
+                    style="padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:12px;font-size:.83rem;color:var(--muted);">
+                    ℹ️ <strong style="color:#fff;">Open an Account</strong> — No contiene un formulario embebido.
+                    Redirige a una solicitud <strong style="color:var(--accent2);">externa</strong> para la apertura de
+                    cuentas de ahorro personales.
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ══════════ FOOTER NOTE ══════════ -->
+    <div class="footer-note">
+        <p>Mapa de Sitio generado el <strong>11 de marzo de 2026</strong> · Fuente: <a href="https://www.always.bank"
+                target="_blank" style="color:var(--accent2);text-decoration:none;">www.always.bank</a></p>
+        <p style="margin-top:6px;">Always Bank es una institución asegurada por la FDIC · Equal Housing Lender</p>
+    </div>
+
+</body>
+
+</html>
